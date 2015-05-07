@@ -1,5 +1,14 @@
 class User < ActiveRecord::Base
   has_secure_password
   validates :password, length: { minimum: 8 }
-  # validate that password is at least 8 characters
+  validate :require_password_confirmation
+  has_many :notes
+
+  private
+
+  def require_password_confirmation
+    if password.present? &&  password != require_password_confirmation
+      errors.add :password_confirmation, 'is required when setting your password'
+    end
+  end
 end
